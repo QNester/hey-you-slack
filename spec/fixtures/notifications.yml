@@ -1,0 +1,12 @@
+events:
+  signed_up:
+    push:
+      title: Hello title
+      body: Hello body!
+    email:
+      subject: Hello subject
+      body: Hello body
+    slack:
+      webhook_name: test
+      text: Hello!
+      icon_emoji: ':grin:'

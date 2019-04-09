@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require 'byebug'
+require "hey-you-slack"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+# (If you use this, don't forget to add pry to your Gemfile!)
+# require "pry"
+# Pry.start
+
+HeyYou::Config.configure do
+  config.slack.webhooks = {
+    test: 'https://hooks.slack.com/services/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'
+  }
+  config.collection_files = ['spec/fixtures/notifications.yml']
+end
+
+require "irb"
+IRB.start(__FILE__)
