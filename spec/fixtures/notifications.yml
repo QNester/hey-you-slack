@@ -10,3 +10,14 @@ events:
       webhook_name: test
       text: Hello!
       icon_emoji: ':grin:'
+
+rspec:
+  test_notification:
+    slack:
+      text: 'Hello, %{pass_variable}!'
+      icon_emoji: ':grin:'
+  test_notification_with_webhook:
+    slack:
+      webhook_name: channel_name_1
+      text: 'Hello, %{pass_variable}!'
+      icon_emoji: ':grin:'

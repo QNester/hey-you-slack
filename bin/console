@@ -11,12 +11,5 @@ require "hey-you-slack"
 # require "pry"
 # Pry.start
 
-HeyYou::Config.configure do
-  config.slack.webhooks = {
-    test: 'https://hooks.slack.com/services/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'
-  }
-  config.collection_files = ['spec/fixtures/notifications.yml']
-end
-
 require "irb"
 IRB.start(__FILE__)

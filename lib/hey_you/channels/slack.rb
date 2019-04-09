@@ -19,6 +19,9 @@ module HeyYou
 
         def send_to_webhook(builder, **options)
           webhook = options[:to] || config.slack.webhooks[builder.slack.webhook_name.to_sym]
+          if webhook == nil || webhook == ""
+            raise WebhookError, 'webhook equal nil or empty string'
+          end
           make_request_to_webhook(builder.slack.webhook_name, webhook, builder)
         end
 
@@ -41,8 +44,7 @@ module HeyYou
             :headers => {
               'Content-Type' => 'application/json',
               'Accept' => 'application/json'
-            },
-            debug_output: $stdout
+            }
           )
           config.logger&.info("Response from slack: #{response.body}")
           return { success: true } if response.body == 'ok'
@@ -53,6 +55,7 @@ module HeyYou
           [:webhooks]
         end
       end
+      class WebhookError < StandardError; end
     end
   end
 end
