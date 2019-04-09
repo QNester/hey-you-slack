@@ -4,7 +4,7 @@ module HeyYou
       attr_reader :username, :text, :icon_emoji, :icon_url, :webhook_name
 
       def build
-        @webhook_name = ch_data.fetch('webhook_name')
+        @webhook_name = ch_data.fetch('webhook_name', nil)
         @username = ch_data.fetch('username', nil) || Config.config.slack.slack_username
         @text = interpolate(ch_data.fetch('text'), options)
         @icon_emoji = ch_data.fetch('icon_emoji', nil)
