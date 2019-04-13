@@ -1,7 +1,7 @@
 # Hey, You, Slack!
 [![Build Status](https://travis-ci.com/QNester/hey-you-slack.svg?branch=master)](https://travis-ci.com/QNester/hey-you#)
 
-Slack notifications via [hey-you gem](https://github.com/QNester/hey-you-slack).
+Slack notifications via [hey-you gem](https://github.com/QNester/hey-you).
 
 ## Installation
 

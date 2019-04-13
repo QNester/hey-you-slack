@@ -9,15 +9,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Sergey Nesterov"]
   spec.email         = ["qnesterr@gmail.com"]
 
-  spec.summary       = "Hello"
-  spec.description   = "Hello"
+  spec.summary       = "Slack notification via gem `hey-you`."
+  spec.description   = "This gem extend core gem `hey-you` for send notifications to slack with webhooks."
   spec.homepage      = "https://github.com/QNester/hey-you-slack"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
     spec.metadata["homepage_uri"] = spec.homepage
     spec.metadata["source_code_uri"] = "https://github.com/QNester/hey-you-slack"
     spec.metadata["changelog_uri"] = "https://github.com/QNester/hey-you-slack/CHANGELOG.md"
