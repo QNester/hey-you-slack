@@ -1,15 +1,10 @@
 RSpec.describe HeyYou::Channels::Slack do
-  let!(:default_webhooks) do
-    {
-      channel_name_1: 'https://default_webhook_1.com',
-      channel_name_2: 'https://default_webhook_2.com',
-    }
-  end
-  let!(:webhooks) do
-    {
-      channel_name_1: 'https://webhook_url_1.com',
-      channel_name_2: 'https://webhook_url_2.com',
-    }
+  let!(:config_webhooks) do
+    h = {}
+    for i in 3..10
+      h["channel_name_#{i}".to_sym] = "https://default_webhook_#{i}.com"
+    end
+    h
   end
 
   before do
@@ -18,7 +13,7 @@ RSpec.describe HeyYou::Channels::Slack do
     HeyYou::Config.configure do
       config.registered_channels = [:slack]
       config.collection_files = TEST_FILE
-      config.slack.webhooks = klass.default_webhooks
+      config.slack.webhooks = klass.config_webhooks
     end
   end
 
@@ -29,36 +24,32 @@ RSpec.describe HeyYou::Channels::Slack do
 
     context 'pass :to option' do
       context ':to option as String' do
-        let!(:to) { webhooks[:channel_name_1] }
+        let!(:to) { config_webhooks.keys.sample }
 
-        it 'send only one request to webhook' do
-          stub = stub_request(:post, to).with(body: builder.slack.to_hash)
+        it 'send only one request to webhook', focus: true do
+          stub = stub_request(:post, config_webhooks[to]).with(body: builder.slack.to_hash)
           subject
           expect(stub).to have_been_requested
         end
       end
 
-      context ':to option as Hash' do
-        let!(:to) { webhooks }
+      context ':to option as Array' do
+        let!(:to) { config_webhooks.keys }
 
         it 'send requests to webhooks' do
-          stub_1 = stub_request(:post, to[:channel_name_1]).with(body: builder.slack.to_hash)
-          stub_2 = stub_request(:post, to[:channel_name_2]).with(body: builder.slack.to_hash)
+          stubs = to.map { |k| stub_request(:post, config_webhooks[k]).with(body: builder.slack.to_hash) }
           subject
-          expect(stub_1).to have_been_requested
-          expect(stub_2).to have_been_requested
+          stubs.each { |stub| expect(stub).to have_been_requested }
         end
       end
 
-      context ':to option as Array' do
-        let!(:to) { webhooks.values }
+      context ':to option as Hash' do
+        let!(:to) { { config_webhooks.keys.first => config_webhooks.values.first } }
 
         it 'ignore :to option' do
-          stub_1 = stub_request(:post, default_webhooks[:channel_name_1]).with(body: builder.slack.to_hash)
-          stub_2 = stub_request(:post, default_webhooks[:channel_name_2]).with(body: builder.slack.to_hash)
+          stubs = config_webhooks.map { |_, v| stub_request(:post, v).with(body: builder.slack.to_hash) }
           subject
-          expect(stub_1).to have_been_requested
-          expect(stub_2).to have_been_requested
+          stubs.each { |stub| expect(stub).to have_been_requested }
         end
       end
     end
@@ -70,7 +61,7 @@ RSpec.describe HeyYou::Channels::Slack do
         let!(:builder) { HeyYou::Builder.new('rspec.test_notification_with_webhook', pass_variable: FFaker::Lorem.word) }
 
         it 'send only one request to webhook' do
-          stub = stub_request(:post, default_webhooks[:channel_name_1]).with(body: builder.slack.to_hash)
+          stub = stub_request(:post, config_webhooks[:channel_name_5]).with(body: builder.slack.to_hash)
           subject
           expect(stub).to have_been_requested
         end
@@ -78,11 +69,9 @@ RSpec.describe HeyYou::Channels::Slack do
 
       context 'webhook_name not defined in notification collection' do
         it 'send only one request to webhook' do
-          stub_1 = stub_request(:post, default_webhooks[:channel_name_1]).with(body: builder.slack.to_hash)
-          stub_2 = stub_request(:post, default_webhooks[:channel_name_2]).with(body: builder.slack.to_hash)
+          stubs = config_webhooks.map { |_, v| stub_request(:post, v).with(body: builder.slack.to_hash) }
           subject
-          expect(stub_1).to have_been_requested
-          expect(stub_2).to have_been_requested
+          stubs.each { |stub| expect(stub).to have_been_requested }
         end
       end
     end

@@ -18,6 +18,6 @@ rspec:
       icon_emoji: ':grin:'
   test_notification_with_webhook:
     slack:
-      webhook_name: channel_name_1
+      webhook_name: channel_name_5
       text: 'Hello, %{pass_variable}!'
       icon_emoji: ':grin:'
