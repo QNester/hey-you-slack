@@ -25,7 +25,7 @@ RSpec.describe HeyYou::Channels::Slack do
       context ':to option as String' do
         let!(:to) { config_webhooks.keys.sample }
 
-        it 'send only one request to webhook', focus: true do
+        it 'send only one request to webhook' do
           stub = stub_request(:post, config_webhooks[to]).with(body: builder.slack.to_hash)
           subject
           expect(stub).to have_been_requested

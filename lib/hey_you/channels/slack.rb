@@ -13,15 +13,15 @@ module HeyYou
           raise CredentialsNotExists unless credentials_present?
 
           if options[:to]&.is_a?(String) || options[:to]&.is_a?(Symbol)
-            return send_to_webhook(builder, options)
+            return send_to_webhook(builder, **options)
           end
 
           if builder.slack&.webhook_name
             options.delete(:to)
-            return send_to_webhook(builder, options)
+            return send_to_webhook(builder, **options)
           end
 
-          send_to_multiple_webhooks(builder, options)
+          send_to_multiple_webhooks(builder, **options)
         end
 
         private
