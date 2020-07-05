@@ -6,15 +6,14 @@ RSpec.describe HeyYou::Channels::Slack do
     end
     h
   end
+  let!(:config) { HeyYou::Config.instance }
 
   before do
-    HeyYou::Config.instance.instance_variable_set(:@splitter, '.')
+    config.splitter = '.'
     klass = self
-    HeyYou::Config.configure do
-      config.registered_channels = [:slack]
-      config.collection_files = TEST_FILE
-      config.slack.webhooks = klass.config_webhooks
-    end
+    config.registered_channels = [:slack]
+    config.data_source.options = { collection_files: [TEST_FILE] }
+    config.slack.webhooks = klass.config_webhooks
   end
 
   let!(:builder) { HeyYou::Builder.new('rspec.test_notification', pass_variable: FFaker::Lorem.word) }
@@ -26,7 +25,7 @@ RSpec.describe HeyYou::Channels::Slack do
       context ':to option as String' do
         let!(:to) { config_webhooks.keys.sample }
 
-        it 'send only one request to webhook', focus: true do
+        it 'send only one request to webhook' do
           stub = stub_request(:post, config_webhooks[to]).with(body: builder.slack.to_hash)
           subject
           expect(stub).to have_been_requested
